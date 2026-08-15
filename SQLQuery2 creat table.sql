@@ -22,9 +22,7 @@ USE vaccine_rnd_db;
 GO
 
 
--- ============================================================
--- 4. STUDY PHASE
--- ============================================================
+
 
 CREATE TABLE StudyPhase (
     phase_id INT PRIMARY KEY IDENTITY(1,1),
@@ -34,9 +32,6 @@ CREATE TABLE StudyPhase (
 GO
 
 
--- ============================================================
--- 5. VACCINE CANDIDATE
--- ============================================================
 
 CREATE TABLE VaccineCandidate (
     candidate_id INT PRIMARY KEY IDENTITY(1,1),
@@ -51,9 +46,7 @@ CREATE TABLE VaccineCandidate (
 GO
 
 
--- ============================================================
--- 6. ANTIGEN
--- ============================================================
+
 
 CREATE TABLE Antigen (
     antigen_id INT PRIMARY KEY IDENTITY(1,1),
@@ -65,10 +58,6 @@ CREATE TABLE Antigen (
 GO
 
 
--- ============================================================
--- 7. CANDIDATE ANTIGEN
--- Many-to-Many relationship between VaccineCandidate and Antigen
--- ============================================================
 
 CREATE TABLE CandidateAntigen (
     candidate_id INT NOT NULL,
@@ -89,9 +78,7 @@ CREATE TABLE CandidateAntigen (
 GO
 
 
--- ============================================================
--- 8. FORMULATION
--- ============================================================
+
 
 CREATE TABLE Formulation (
     formulation_id INT PRIMARY KEY IDENTITY(1,1),
@@ -109,11 +96,7 @@ CREATE TABLE Formulation (
 GO
 
 
--- ============================================================
--- 9. BATCH
--- ============================================================
 
-CREATE TABLE Batch (
     batch_id INT PRIMARY KEY IDENTITY(1,1),
     formulation_id INT NOT NULL,
     batch_code VARCHAR(30) NOT NULL UNIQUE,
@@ -135,9 +118,7 @@ CREATE TABLE Batch (
 GO
 
 
--- ============================================================
--- 10. SITE
--- ============================================================
+
 
 CREATE TABLE Site (
     site_id INT PRIMARY KEY IDENTITY(1,1),
@@ -150,9 +131,6 @@ CREATE TABLE Site (
 GO
 
 
--- ============================================================
--- 11. STUDY
--- ============================================================
 
 CREATE TABLE Study (
     study_id INT PRIMARY KEY IDENTITY(1,1),
@@ -182,10 +160,7 @@ CREATE TABLE Study (
 GO
 
 
--- ============================================================
--- 12. STUDY SITE
--- Many-to-Many relationship between Study and Site
--- ============================================================
+
 
 CREATE TABLE StudySite (
     study_id INT NOT NULL,
@@ -208,9 +183,6 @@ CREATE TABLE StudySite (
 GO
 
 
--- ============================================================
--- 13. PARTICIPANT
--- ============================================================
 
 CREATE TABLE Participant (
     participant_id INT PRIMARY KEY IDENTITY(1,1),
@@ -228,10 +200,7 @@ CREATE TABLE Participant (
 GO
 
 
--- ============================================================
--- 14. STUDY PARTICIPANT
--- Many-to-Many relationship between Study and Participant
--- ============================================================
+
 
 CREATE TABLE StudyParticipant (
     study_id INT NOT NULL,
@@ -253,9 +222,7 @@ CREATE TABLE StudyParticipant (
 GO
 
 
--- ============================================================
--- 15. ADVERSE EVENT
--- ============================================================
+
 
 CREATE TABLE AdverseEvent (
     adverse_event_id INT PRIMARY KEY IDENTITY(1,1),
@@ -273,9 +240,7 @@ CREATE TABLE AdverseEvent (
 GO
 
 
--- ============================================================
--- 16. LAB TEST
--- ============================================================
+
 
 CREATE TABLE LabTest (
     lab_test_id INT PRIMARY KEY IDENTITY(1,1),
@@ -294,9 +259,6 @@ CREATE TABLE LabTest (
 GO
 
 
--- ============================================================
--- 17. INDEXES
--- ============================================================
 
 CREATE INDEX idx_study_candidate
 ON Study(candidate_id);
@@ -315,9 +277,6 @@ ON LabTest(participant_id);
 GO
 
 
--- ============================================================
--- 18. VERIFY TABLES
--- ============================================================
 
 SELECT TABLE_NAME
 FROM INFORMATION_SCHEMA.TABLES
