@@ -2,9 +2,6 @@ USE vaccine_rnd_db;
 GO
 
 
--- ============================================================
--- 1. Retrieve vaccine candidates in Phase II or Phase III
--- ============================================================
 
 SELECT *
 FROM VaccineCandidate
@@ -12,9 +9,7 @@ WHERE development_stage IN ('Phase II', 'Phase III');
 GO
 
 
--- ============================================================
--- 2. Candidates and their studies
--- ============================================================
+
 
 SELECT
     vc.candidate_name,
@@ -27,9 +22,7 @@ ORDER BY vc.candidate_name;
 GO
 
 
--- ============================================================
--- 3. Number of candidates at each development stage
--- ============================================================
+
 
 SELECT
     development_stage,
@@ -40,9 +33,7 @@ ORDER BY candidate_count DESC;
 GO
 
 
--- ============================================================
--- 4. Vaccine candidates and their antigens
--- ============================================================
+
 
 SELECT
     vc.candidate_name,
@@ -58,9 +49,6 @@ ORDER BY vc.candidate_name;
 GO
 
 
--- ============================================================
--- 5. Candidates involved in more than one study
--- ============================================================
 
 SELECT candidate_name
 FROM VaccineCandidate
@@ -73,9 +61,6 @@ WHERE candidate_id IN (
 GO
 
 
--- ============================================================
--- 6. Average laboratory result by test type
--- ============================================================
 
 SELECT
     test_type,
@@ -85,9 +70,6 @@ GROUP BY test_type;
 GO
 
 
--- ============================================================
--- 7. Number of adverse events per study
--- ============================================================
 
 SELECT
     s.study_code,
@@ -102,9 +84,6 @@ ORDER BY total_events DESC;
 GO
 
 
--- ============================================================
--- 8. INSERT test participant
--- ============================================================
 
 INSERT INTO Participant
     (anonymized_code, age, sex, screening_status)
@@ -113,9 +92,6 @@ VALUES
 GO
 
 
--- ============================================================
--- 9. UPDATE test participant
--- ============================================================
 
 UPDATE Participant
 SET screening_status = 'Screened'
@@ -123,37 +99,26 @@ WHERE anonymized_code = 'P-TEST';
 GO
 
 
--- ============================================================
--- 10. DELETE test participant
--- ============================================================
 
 DELETE FROM Participant
 WHERE anonymized_code = 'P-TEST';
 GO
 
 
--- ============================================================
--- 11. Candidate pipeline view
--- ============================================================
 
 SELECT *
 FROM vw_candidate_pipeline;
 GO
 
 
--- ============================================================
--- 12. Study safety summary view
--- ============================================================
+
 
 SELECT *
 FROM vw_study_safety_summary;
 GO
 
 
--- ============================================================
--- 13. Execute stored procedure
--- SQL Server uses EXEC, NOT CALL
--- ============================================================
+
 
 EXEC sp_study_enrollment 1;
 GO
