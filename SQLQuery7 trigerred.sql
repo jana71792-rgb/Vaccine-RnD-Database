@@ -2,9 +2,7 @@ USE vaccine_rnd_db;
 GO
 
 
-/* ============================================================
-   1. TRIGGER: Validate Batch Dates
-   ============================================================ */
+
 
 CREATE TRIGGER trg_batch_dates
 ON Batch
@@ -25,9 +23,7 @@ END;
 GO
 
 
-/* ============================================================
-   2. STORED PROCEDURE: Study Enrollment
-   ============================================================ */
+
 
 CREATE PROCEDURE sp_study_enrollment
     @p_study_id INT
