@@ -2,9 +2,7 @@ USE vaccine_rnd_db;
 GO
 
 
-/* ============================================================
-   1. VIEW: Candidate Pipeline
-   ============================================================ */
+
 
 CREATE OR ALTER VIEW vw_candidate_pipeline
 AS
@@ -28,9 +26,7 @@ GROUP BY
 GO
 
 
-/* ============================================================
-   2. VIEW: Study Safety Summary
-   ============================================================ */
+
 
 CREATE OR ALTER VIEW vw_study_safety_summary
 AS
