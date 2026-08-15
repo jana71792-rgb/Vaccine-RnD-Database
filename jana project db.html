@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaccine R&D Management System | Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0e7490;
+            --primary-hover: #0891b2;
+            --primary-light: #e0f2fe;
+            --secondary: #0f172a;
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--secondary);
+            color: #fff;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 0.5rem 1.5rem;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand i {
+            font-size: 1.8rem;
+            color: #38bdf8;
+        }
+
+        .brand h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .nav-item button:hover,
+        .nav-item button.active {
+            background-color: var(--primary);
+            color: #fff;
+        }
+
+        .main-wrapper {
+            margin-left: 260px;
+            flex: 1;
+            padding: 2rem;
+            max-width: calc(100% - 260px);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: var(--card-bg);
+            padding: 1.25rem 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .page-title h1 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .db-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .stat-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .candidate-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .candidate-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary);
+        }
+
+        .candidate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .candidate-code {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .candidate-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-top: 0.25rem;
+        }
+
+        .stage-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .stage-preclinical {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .stage-phase1 {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .stage-phase2 {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .stage-phase3 {
+            background: #fae8ff;
+            color: #86198f;
+        }
+
+        .candidate-body {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 0.75rem;
+        }
+
+        .candidate-body div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .candidate-body strong {
+            color: var(--text-main);
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--secondary);
+            font-weight: 700;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .status-tag {
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-recruiting {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-completed {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .status-released {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-review {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-quarantine {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .grid-two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 80px;
+                padding: 1rem 0.5rem;
+            }
+
+            .sidebar .brand h2,
+            .sidebar button span {
+                display: none;
+            }
+
+            .sidebar button {
+                justify-content: center;
+            }
+
+            .main-wrapper {
+                margin-left: 80px;
+                max-width: calc(100% - 80px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-vial-virus"></i>
+            <h2>Vaccine R&D<br>
+                <span style="font-size:0.75rem; font-weight:400; color:#94a3b8;">Management Portal</span>
+            </h2>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <button class="active" onclick="switchTab('dashboard', this)">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchTab('candidates', this)">
+                    <i class="fa-solid fa-dna"></i>
+                    <span>Vaccine Candidates</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchTab('studies', this)">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>Clinical Studies</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchTab('manufacturing', this)">
+                    <i class="fa-solid fa-boxes-packing"></i>
+                    <span>Manufacturing & Formulations</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchTab('safety', this)">
+                    <i class="fa-solid fa-shield-heart"></i>
+                    <span>Safety & Testing</span>
+                </button>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-wrapper">
+        <header>
+            <div class="page-title">
+                <h1 id="page-heading">Dashboard</h1>
+                <p>Clinical Vaccine R&D Database Management System</p>
+            </div>
+            <div class="db-badge">
+                <i class="fa-solid fa-database"></i>
+                <span>vaccine_rnd_db</span>
+            </div>
+        </header>
+
+        <!-- DASHBOARD TAB -->
+        <section id="dashboard" class="content-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#e0f2fe; color:#0284c7;">
+                        <i class="fa-solid fa-syringe"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>10</h3>
+                        <p>Vaccine Candidates</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#dcfce7; color:#16a34a;">
+                        <i class="fa-solid fa-microscope"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>10</h3>
+                        <p>Active Studies</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#fef3c7; color:#d97706;">
+                        <i class="fa-solid fa-hospital-user"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>Enrolled Participants</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#fae8ff; color:#c026d3;">
+                        <i class="fa-solid fa-building-ngo"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>10</h3>
+                        <p>Trial Sites</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-two-col">
+                <div>
+                    <div class="section-header">
+                        <h2 class="section-title">Development Pipeline (vw_candidate_pipeline)</h2>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Platform</th>
+                                    <th>Stage</th>
+                                    <th>Study Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VC001</td>
+                                    <td>VaxNova-Alpha</td>
+                                    <td>mRNA</td>
+                                    <td>Phase I</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>VC002</td>
+                                    <td>ImmunoShield-2</td>
+                                    <td>Protein subunit</td>
+                                    <td>Phase II</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>VC003</td>
+                                    <td>VectorSafe-3</td>
+                                    <td>Viral vector</td>
+                                    <td>Preclinical</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>VC004</td>
+                                    <td>CoroGuard-4</td>
+                                    <td>mRNA</td>
+                                    <td>Phase III</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>VC005</td>
+                                    <td>FluNext-5</td>
+                                    <td>Protein subunit</td>
+                                    <td>Phase II</td>
+                                    <td>1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <div class="section-header">
+                        <h2 class="section-title">Safety Summary (vw_study_safety_summary)</h2>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Study Code</th>
+                                    <th>Participants</th>
+                                    <th>Adverse Events</th>
+                                    <th>Moderate Severity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ST001</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>ST002</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>ST004</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>ST005</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>ST009</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CANDIDATES TAB -->
+        <section id="candidates" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Active Vaccine Candidates</h2>
+            </div>
+            <div class="candidates-grid">
+                <div class="candidate-card">
+                    <div class="candidate-header">
+                        <div>
+                            <span class="candidate-code">VC001</span>
+                            <div class="candidate-name">VaxNova-Alpha</div>
+                        </div>
+                        <span class="stage-badge stage-phase1">Phase I</span>
+                    </div>
+                    <div class="candidate-body">
+                        <div><span>Platform:</span> <strong>mRNA</strong></div>
+                        <div><span>Target Disease:</span> <strong>Respiratory Virus A</strong></div>
+                        <div><span>Sponsor:</span> <strong>NovaBio Research</strong></div>
+                        <div><span>Development Date:</span> <strong>2025-01-15</strong></div>
+                    </div>
+                </div>
+                <div class="candidate-card">
+                    <div class="candidate-header">
+                        <div>
+                            <span class="candidate-code">VC002</span>
+                            <div class="candidate-name">ImmunoShield-2</div>
+                        </div>
+                        <span class="stage-badge stage-phase2">Phase II</span>
+                    </div>
+                    <div class="candidate-body">
+                        <div><span>Platform:</span> <strong>Protein subunit</strong></div>
+                        <div><span>Target Disease:</span> <strong>Respiratory Virus B</strong></div>
+                        <div><span>Sponsor:</span> <strong>Immunex Labs</strong></div>
+                        <div><span>Development Date:</span> <strong>2024-09-20</strong></div>
+                    </div>
+                </div>
+                <div class="candidate-card">
+                    <div class="candidate-header">
+                        <div>
+                            <span class="candidate-code">VC003</span>
+                            <div class="candidate-name">VectorSafe-3</div>
+                        </div>
+                        <span class="stage-badge stage-preclinical">Preclinical</span>
+                    </div>
+                    <div class="candidate-body">
+                        <div><span>Platform:</span> <strong>Viral vector</strong></div>
+                        <div><span>Target Disease:</span> <strong>Hemorrhagic Fever C</strong></div>
+                        <div><span>Sponsor:</span> <strong>VectorGen</strong></div>
+                        <div><span>Development Date:</span> <strong>2025-03-11</strong></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STUDIES TAB -->
+        <section id="studies" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Clinical Studies Schedule</h2>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Study Code</th>
+                            <th>Title</th>
+                            <th>Start Date</th>
+                            <th>Status</th>
+                            <th>Target Enrollment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ST001</strong></td>
+                            <td>Safety and dose study of VaxNova-Alpha</td>
+                            <td>2026-02-01</td>
+                            <td><span class="status-tag status-recruiting">Recruiting</span></td>
+                            <td>60</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ST002</strong></td>
+                            <td>Immunogenicity study of ImmunoShield-2</td>
+                            <td>2025-10-01</td>
+                            <td><span class="status-tag status-recruiting">Recruiting</span></td>
+                            <td>120</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- MANUFACTURING TAB -->
+        <section id="manufacturing" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Vaccine Formulations</h2>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Formulation Code</th>
+                            <th>Adjuvant</th>
+                            <th>Administration Route</th>
+                            <th>Dose Volume</th>
+                            <th>Storage Temp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>F-VC001-A</td>
+                            <td>Lipid nanoparticle</td>
+                            <td>Intramuscular</td>
+                            <td>0.50 ml</td>
+                            <td>-20 C</td>
+                        </tr>
+                        <tr>
+                            <td>F-VC002-A</td>
+                            <td>Alum</td>
+                            <td>Intramuscular</td>
+                            <td>0.50 ml</td>
+                            <td>2-8 C</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SAFETY TAB -->
+        <section id="safety" class="content-section">
+            <div class="grid-two-col">
+                <div>
+                    <div class="section-header">
+                        <h2 class="section-title">Adverse Events Log</h2>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Event Type</th>
+                                    <th>Severity</th>
+                                    <th>Outcome</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2026-02-07</td>
+                                    <td>Injection-site pain</td>
+                                    <td>Mild</td>
+                                    <td>Resolved</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-10-14</td>
+                                    <td>Fever</td>
+                                    <td>Moderate</td>
+                                    <td>Resolved</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <div class="section-header">
+                        <h2 class="section-title">Lab Test Results</h2>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Test Type</th>
+                                    <th>Result</th>
+                                    <th>Unit</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Neutralizing Abs</td>
+                                    <td>1:320</td>
+                                    <td>Titer</td>
+                                    <td><span class="status-tag status-active">Passed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>ELISA IgG</td>
+                                    <td>4.2</td>
+                                    <td>OD450</td>
+                                    <td><span class="status-tag status-active">Passed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function switchTab(tabId, element) {
+
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.nav-item button');
+            buttons.forEach(button => button.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+
+            const titleText = element.querySelector('span').innerText;
+            document.getElementById('page-heading').innerText = titleText;
+        }
+    </script>
+</body>
+
+</html>
